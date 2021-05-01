@@ -68,7 +68,7 @@ length' xs = sum [1 | _ <- xs]
 -- [Char] is synonymous with String, so it's clearer to just write String
 -- removeNonUpperCase :: [Char] -> [Char]
 removeNonUpperCase :: String -> String
-removeNonUpperCase st = [ c | c <- st, c `elem` ['A'..'Z'] ]
+removeNonUppercase st = [ c | c <- st, c `elem` ['A'..'Z'] ]
 
 
 -- The size and types contained in a tuple determine its type
@@ -186,11 +186,11 @@ myParse s = read s
 --		- pred :: function to get the predecessor
 --
 --	- Types in this class include: (), Bool, Char, Ordering, Int, Integer, Float and Double
-getSuccessor :: (Enum a) => a -> a
-getSuccessor x = succ x
+getSuccessor :: (Ord a) => [a] -> a
+getSuccessor xs = succ xs
 
-getPredecessor :: (Enum a) => a -> a
-getPredecessor x = pred x
+getPredecessor :: (Ord a) => [a] -> a
+getPredecessor xs = pred xs
 
 
 -- Bounded :: members have an upper and lower bound
