@@ -239,3 +239,104 @@ getPredecessor x = pred x
 -- 		- ex) fromIntegral (length [1,2,3]) + 3.2 ... output: 6.2 
 -- 			- because fromIntegral would turn the length Int into a Num and the
 -- 				compiler could cast the Num into a Float and add it to 3.2
+
+
+-- Pattern Matcing in Haskell allows you to define separate function bodies for different patterns
+lucky :: (Integral a) => a -> String
+lucky 7 = "LUCKY NUMBER SEVEN!"
+lucky x = "Sorry, you're out of luck, pal!"
+
+
+-- Using pattern matching instead of if/else statements allows for more succint code that can deal
+-- 	with a larger set of runetime cases
+sayMe :: (Integral a) => a -> String
+sayMe 1 = "One!"
+sayMe 2 = "Two!"
+sayMe 3 = "Three!"
+sayMe 4 = "Four!"
+sayMe 5 = "Five!"
+sayMe x = "Not between 1 and 5"
+
+
+-- Pattern matching can help define recursive functions where base cases are represented as 
+-- 	individual patterns and recursive cases are also represented as individual patterns
+factorial' :: (Integral a) => a -> a
+factorial' 0 = 1
+factorial' n = n * factorial' (n - 1)
+
+
+-- Pattern matching can fail if the patterns / cases handled aren't exhausted
+-- 	- make a pattern matching construct exhaustive by adding a catchall / default case
+charName :: Char -> String
+charName 'a' = "Albert"
+charName 'b' = "Broseph"
+charName 'c' = "Cecil"
+charName _ = "Catchall case"
+
+
+-- Tuples can be used in pattern matching
+addVectors :: (Num a) => (a, a) -> (a, a) -> (a, a)
+addVectors a b = (fst a + fst b, snd a + snd b)
+
+
+-- The previous version works, but it can also be done using destructuring to
+-- 	bind inputs to local variables
+addVectors' :: (Num a) => (a, a) -> (a, a) -> (a, a)
+addVectors' (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
+
+
+-- You can use pattern matching to destructure input and bind to local variables 
+-- 	to the values easier
+first :: (a, b, c) -> a
+first (x, _, _) = x
+
+second :: (a, b, c) -> b
+second (_, y, _) = y
+
+third :: (a, b, c) -> c
+third (_, _, z) = z
+
+
+-- Pattern matching can be used in list comprehensions 
+-- let xs = [(1,3), (4,3), (2,4), (5,3), (5,6), (3,1)]
+-- [ a+b | (a,b) <- xs ]
+
+
+-- Lists can be used in pattern matching as well
+head' :: [a] -> a
+head' [] = error "Can't call head on an empty list!"
+head' (x:_) = x
+
+
+-- Another example of using lists in pattern matching to get more more than just
+-- 	the head of the list
+tell :: (Show a) => [a] -> String
+tell [] = "The list is empty"
+tell (x:[]) = "The list has one element: " ++ show x
+tell (x:y:[]) = "The list has two elements: " ++ show x ++ " and " ++ show y
+tell (x:y:_) = "The list is long.  The first two elements are: " ++ show x ++ " and " ++ show y
+
+
+-- A reimplementation of the length function using pattern matching, destructuring
+-- 	and recursion would look like the following:
+length'' :: (Num b) => [a] -> b
+length'' [] = 0
+length'' (_:xs) = 1 + length'' xs
+ 
+
+sum' :: (Num a) => [a] -> a
+sum' [] = 0
+sum' (x:xs) = x + sum' xs
+
+
+-- In pattern matching, there's something called 'as patterns' (denoted with an '@' symbol) 
+-- 	- this allows destructing input and binding to local variables but you an also retain
+-- 		a reference to the entirety of the original input
+-- 	- in the following example 'all' is a reference to the original input and 'x' and 'xs'
+-- 		are destructed and bound local variables
+--
+-- 	- use 'as patterns' when you want to avoid repeating yourself when matching against a pattern
+-- 		and you have to use that whole thing again in the body of the function
+capital :: String -> String
+capital "" = "Empty string, whoops!"
+capital all@(x:xs) = "The first letter of " ++ all ++ " is " ++ [x]
